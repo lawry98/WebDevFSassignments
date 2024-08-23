@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const adminMiddleware = require("../middleware/admin");
-const { Admin } = require("../db");
+const { Admin, Course } = require("../db");
 const router = Router();
 const jwt = require('jsonwebtoken');
 const jwtPassword = "secret123";
@@ -27,8 +27,14 @@ router.post('/signin', async(req, res) => {
     });
 });
 
-router.post('/courses', adminMiddleware, (req, res) => {
+router.post('/courses', adminMiddleware, async (req, res) => {
     // Implement course creation logic
+    const title = req.body.title;
+    const description = req.body.description;
+    const price = req.body.price;
+    const imagelink = req.body.imagelink;
+    const resp = await Course.create({title, description, price, imagelink});
+    res.status(200).json({message: 'Course created successfully', courseId: resp._id});
 });
 
 router.get('/courses', adminMiddleware, (req, res) => {
