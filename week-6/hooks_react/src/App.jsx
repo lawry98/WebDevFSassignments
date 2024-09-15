@@ -1,41 +1,38 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
 import axios from 'axios';
 
 function App() {
-  const [id, setId] = useState(1);
+  const [count, setcount] = useState(0);
+  const [inputVal, setInputVal] = useState(0);
 
+  // let sum = 0;
+  // for(let i=1; i<=inputVal; i++){
+  //   sum+=i;
+  // }
+  
+  let sum = useMemo(()=>{
+    let sum1 = 0;
+    for(let i=1; i<=inputVal; i++){
+      sum1+=i;
+    }
+    return sum1;      
+  }, [inputVal])
   return (
     <div>
-      <button onClick={() => setId(1)}>1</button>
-      <button onClick={() => setId(2)}>2</button>
-      <button onClick={() => setId(3)}>3</button>
-      <button onClick={() => setId(4)}>4</button>
-      <TodoId id={id} />
+      <button onClick={() => setcount(count+1)}>{"counter "+count}</button>
+      <div></div>
+      <input type="text" onChange={(e) => {
+        setInputVal(e.target.value);
+      }}></input>
+      <div>{sum}</div>
     </div>
   );
 }
 
-function TodoId({ id }) {
-  const [todo, setTodo] = useState(null);
 
-  useEffect(() => {
-    axios.get(`https://dummyjson.com/todos/${id}`).then((res) => {
-      setTodo(res.data);
-      console.log(res.data);
-    });
-  }, [id]);
 
-  if (!todo) return <div>Loading...</div>;
-
-  return (
-    <>
-      <div>{todo.id}</div>
-      <div>{todo.todo}</div>
-    </>
-  );
-}
 
 export default App;
